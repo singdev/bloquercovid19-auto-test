@@ -1,6 +1,7 @@
 const express = require('express');
 const bodyParser = require('body-parser');
 const mongoose = require('mongoose');
+const cors = require('cors');
 
 const autoTestRouter = require('./autotest/autotest-router');
 
@@ -11,6 +12,7 @@ const PORT = 19190;
 
 const app = express();
 
+app.use(cors());
 app.use(bodyParser.json());
 
 app.use('/', autoTestRouter);
