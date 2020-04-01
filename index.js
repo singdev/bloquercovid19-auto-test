@@ -13,6 +13,11 @@ const PORT = 19190;
 const app = express();
 
 app.use(cors());
+
+app.use(express.static(__dirname + '/data'));
+
+app.get((req, res) => res.sendFile(path.join(__dirname)));
+
 app.use(bodyParser.json());
 
 app.use('/', autoTestRouter);
