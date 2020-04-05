@@ -221,7 +221,7 @@ function getPotentiellementSainCount(data) {
 }
 
 function loadAllAutoTest() {
-    fetch('http://54.38.190.167:19190/' + 'autotest')
+    fetch('https://app.bloquercovid19.com/bat/autotest')
         .then(response => response.json())
         .then(json => {
             const questions = [];
