@@ -1,0 +1,113 @@
+* {
+    padding: 0px;
+    margin: 0px;
+    box-sizing: border-box;
+    font-family: 'Baloo Thambi 2', cursive;
+}
+
+html {
+    scroll-behavior: smooth;
+}
+
+main {
+    padding: 16px;
+    height: 100vh;
+    overflow: hidden;
+}
+
+.global-data {
+    padding: 8px;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-evenly;
+    margin-bottom: 20px;
+    border-bottom: 1px solid #cccccc;
+}
+
+.group {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+.group p {
+    padding: 4px;
+    font-size: 14px;
+    color: black;
+}
+
+.group .gnb_test, .group .gnb_bad, .group .gnb_good {
+    font-size: 2.5em;
+} 
+
+.group .info {
+    color: #777777;
+}
+
+.map-data {
+    display: flex;
+    flex-direction: row;
+}
+
+#data {
+    padding: 20px;
+    width: 50%;
+}
+
+.villes {
+    overflow: scroll;
+    height: 50vh;
+}
+
+.ville {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    margin-bottom: 16px;
+    width: 100%;
+    border-left: 8px solid #00c652;
+    padding: 16px;
+    background-color: #eeeeee;
+}
+
+.ville h2 {
+    font-size: 16px;
+}
+
+.pglobal {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-evenly;
+    padding: 20px;
+    margin-bottom: 20px;
+}
+
+#vmap {
+    width: 600px;
+    height: 400px;
+}
+
+@media screen and (max-width: 600px){
+
+    main {
+        overflow: scroll;
+        height: auto;
+    }
+
+    .map-data {
+        display: flex;
+        flex-direction: column;
+    }
+
+    #data {
+        width: 100%;
+        height: fit-content;
+        padding: 0px;
+    }
+
+    #vmap {
+        width: 100%;
+    }
+
+}
