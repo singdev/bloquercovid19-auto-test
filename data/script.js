@@ -2,6 +2,10 @@ import { AutoTest } from "./autotest.js";
 
 let autoTests = null;
 
+function getCode(index){
+    return "gab." + (index+1) + "_1";
+}
+
 const PROVINCES = {
     "Estuaire": [
         "Cocobeach",
@@ -66,30 +70,36 @@ const PROVINCES = {
 
 loadAllAutoTest();
 
-jQuery(document).ready(function () {
-    jQuery('#vmap').vectorMap({
-        map: 'gabon',
-        backgroundColor: '#a5bfdd',
-        borderColor: '#818181',
-        borderOpacity: 0.25,
-        borderWidth: 1,
-        color: '#f4f3f0',
-        enableZoom: true,
-        hoverColor: '#c9dfaf',
-        hoverOpacity: null,
-        normalizeFunction: 'linear',
-        scaleColors: ['#b6d6ff', '#005ace'],
-        selectedColor: '#c9dfaf',
-        selectedRegions: null,
-        showTooltip: true,
-        onRegionClick: function (element, code, region) {
-            this.selectedRegions = code
-            const data = getRegionData(region);
-            displayRegionData(region, data);
-            window.location = "#data";
-        }
-    });
-})
+function loadMap(colors){
+    console.log(colors);
+    jQuery(document).ready(function () {
+
+        jQuery('#vmap').vectorMap({
+            map: 'gabon',
+            backgroundColor: '#00c652',
+            borderColor: '#818181',
+            borderOpacity: 0.25,
+            borderWidth: 1,
+            color: '#f4f3f0',
+            enableZoom: true,
+            hoverColor: false,
+            hoverOpacity: 0.7,
+            normalizeFunction: 'linear',
+            scaleColors: ['#b6d6ff', '#005ace'],
+            selectedColor: '#c9dfaf',
+            selectedRegions: null,
+            showTooltip: true,
+            colors: colors,
+            onRegionClick: function (element, code, region) {
+                this.selectedRegions = code
+                console.log(code);
+                const data = getRegionData(region);
+                displayRegionData(region, data);
+                window.location = "#data";
+            }
+        });
+    })
+}
 
 function getRegionData(region) {
     const data = [];
@@ -102,10 +112,49 @@ function getRegionData(region) {
     return data;
 }
 
+function visualize(gdpData) {
+    var max = 0,
+        min = Number.MAX_VALUE,
+        cc,
+        startColor = [200, 238, 255],
+        endColor = [0, 100, 145],
+        colors = {},
+        hex;
+
+    //find maximum and minimum values
+    for (cc in gdpData) {
+        if (parseFloat(gdpData[cc]) > max) {
+            max = parseFloat(gdpData[cc]);
+        }
+        if (parseFloat(gdpData[cc]) < min) {
+            min = parseFloat(gdpData[cc]);
+        }
+    }
+
+    //set colors according to values of GDP
+    for (cc in gdpData) {
+        if (gdpData[cc] > 0) {
+            colors[cc] = '#';
+            for (var i = 0; i < 3; i++) {
+                hex = Math.round(startColor[i]
+                    + (endColor[i]
+                        - startColor[i])
+                    * (gdpData[cc] / (max - min + 1))).toString(16);
+                if (hex.length == 1) {
+                    hex = '0' + hex;
+                }
+                colors[cc] += (hex.length == 1 ? '0' : '') + hex;
+            }
+        }
+    }
+
+    return colors;
+}
+
 function displayRegionData(region, data) {
     document.querySelector('.province').innerHTML = region;
-    document.querySelector('.nb_test').innerHTML =  "<strong>" + getTestCount(data) + "</strong>" + " Auto test";
-    document.querySelector('.nb_bad').innerHTML = "<strong>" + getPotentiellementMaladeCount(data) +"</strong>" + " Potentiellement malade";
+    document.querySelector('.nb_test').innerHTML = "<strong>" + getTestCount(data) + "</strong>" + " Auto test";
+    document.querySelector('.nb_bad').innerHTML = "<strong>" + getPotentiellementMaladeCount(data) + "</strong>" + " Potentiellement malade";
     document.querySelector('.nb_good').innerHTML = "<strong>" + getPotentiellementSainCount(data) + "</strong>" + " Potentiellement sain";
 
     displayVillesData(data, region);
@@ -230,6 +279,15 @@ function loadAllAutoTest() {
             })
             autoTests = new AutoTest(questions);
             displayGlobalData();
+
+            const gdpData = {};
+            let i = 0;
+            for(let region in PROVINCES) {
+                gdpData[getCode(i)] = getRegionData(region).length + 1;
+                i++;
+            }
+            console.log(gdpData);
+            loadMap(visualize(gdpData));
         })
 }
 
